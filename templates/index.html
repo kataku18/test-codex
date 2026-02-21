@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Instagram自動投稿</title>
+    <style>
+      body { font-family: system-ui, sans-serif; margin: 0; background: #f8fafc; }
+      .wrap { max-width: 760px; margin: 24px auto; background: white; padding: 20px; border-radius: 14px; }
+      label { display:block; margin-top: 12px; font-weight: 600; }
+      input, textarea { width: 100%; padding: 10px; margin-top: 6px; }
+      button { margin-top: 16px; padding: 12px 16px; border: 0; border-radius: 10px; background: #4f46e5; color: #fff; }
+      pre { background:#0f172a; color:#f8fafc; padding:12px; border-radius:8px; white-space:pre-wrap; }
+      .note { font-size: 13px; color:#334155; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Instagram 自動投稿ツール</h1>
+      <p class="note">入力された投稿条件からAIでキャプションを作り、PlaywrightでInstagramへ自動投稿します。</p>
+
+      <label>ユーザ名</label>
+      <input id="username" autocomplete="username" />
+
+      <label>パスワード</label>
+      <input id="password" type="password" autocomplete="current-password" />
+
+      <label>投稿テーマ</label>
+      <input id="topic" placeholder="例: 新作スニーカーの紹介" />
+
+      <label>対象読者</label>
+      <input id="audience" placeholder="例: 20代のストリートファッション好き" />
+
+      <label>トーン</label>
+      <input id="tone" placeholder="例: 親しみやすく元気" />
+
+      <label>追加要望（任意）</label>
+      <textarea id="extra_instructions" rows="3"></textarea>
+
+      <button onclick="run()">自動投稿を実行</button>
+
+      <h3>結果</h3>
+      <pre id="result">未実行</pre>
+    </div>
+
+    <script>
+      async function run() {
+        const payload = {
+          username: document.getElementById('username').value,
+          password: document.getElementById('password').value,
+          topic: document.getElementById('topic').value,
+          audience: document.getElementById('audience').value,
+          tone: document.getElementById('tone').value,
+          extra_instructions: document.getElementById('extra_instructions').value,
+        };
+        const res = await fetch('/api/auto-post', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json();
+        document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+      }
+    </script>
+  </body>
+</html>
