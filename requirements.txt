@@ -1,0 +1,4 @@
+Flask==3.0.3
+openai==1.40.6
+playwright==1.46.0
+Pillow==10.4.0
